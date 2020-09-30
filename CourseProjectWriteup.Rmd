@@ -1,0 +1,151 @@
+---
+title: "Prediction Assignment Writeup"
+author: "José Eduardo Mata"
+date: "9/30/2020"
+output: html_document
+---
+
+# Prediction assignment writeup
+
+## Background
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+Read more: http:/groupware.les.inf.puc-rio.br/har#ixzz4TjqdGWWx
+
+## About the data:
+Six young health participants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashions: exactly according to the specification (Class A), throwing the elbows to the front (Class B), lifting the dumbbell only halfway (Class C), lowering the dumbbell only halfway (Class D) and throwing the hips to the front (Class E).
+
+Class A corresponds to the specified execution of the exercise, while the other 4 classes correspond to common mistakes. Participants were supervised by an experienced weight lifter to make sure the execution complied to the manner they were supposed to simulate. The exercises were performed by six male participants aged between 20-28 years, with little weight lifting experience. We made sure that all participants could easily simulate the mistakes in a safe and controlled manner by using a relatively light dumbbell (1.25kg).
+
+
+WLE dataset:
+Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013.
+
+Read more: http:/groupware.les.inf.puc-rio.br/har#ixzz4Tjr6x800
+
+
+## Goal
+
+The goal of the project is to predict the manner in which the particpants did the exercise. This is the "classe" variable in the training set.
+
+## Strategy
+
+Will make three models using three different methods: clasification tree, random forest and multi-variate lienar regression, and will choose the most accurate one.   
+
+## Libraries
+
+```{r libraries}
+library(caret)
+library(ggplot2)
+library(randomForest)
+library(gbm)
+library(rattle)
+library(corrplot)
+```
+
+## Load, clean and partition data
+
+```{r}
+TrainData <- read.csv(url("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"),header=TRUE)
+dim(TrainData)
+
+TestData <- read.csv(url("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"),header=TRUE)
+dim(TestData)
+
+str(TrainData)
+```
+
+
+After inspecting the training data, I see several variables that might be filled with NA's. I'll remove columns with high rate of NA's (more than 90%) and the first seven columns, which consists of particpant and time data (particpant names, timestamps, etc.)
+
+```{r}
+ColRemove <- which(colSums(is.na(TrainData) |TrainData=="")>0.9*dim(TrainData)[1]) 
+TrainDataC <- TrainData[,-ColRemove]
+TrainDataC<- TrainDataC[,-c(1:7)]
+dim(TrainDataC)
+```
+ After this, the data set is reduced to 53 variables (from 160).
+ 
+Now I'll partition into training and testing set
+ 
+```{r}
+# create a partition with the training dataset 
+inTrain  <- createDataPartition(TrainDataC$classe, p=0.7, list=FALSE)
+TrainSet <- TrainDataC[inTrain, ]
+TestSet  <- TrainDataC[-inTrain, ]
+dim(TrainSet)
+dim(TestSet)
+```
+
+##Correlation analysis
+
+```{r}
+corMatrix <- cor(TrainSet[, -53])
+corrplot(corMatrix, order = "FPC", method = "color", type = "lower", 
+         tl.cex = 0.8, tl.col = rgb(0, 0, 0))
+```
+ 
+This correlation plot, shows highly correlated variables as darker squares. Judging that there is no excessive amount of related variables, we will continue with model building. An extra step could have been to filter out more variables using PCA.
+
+## Training and predicting with classification tree
+
+```{r}
+#Training the model
+set.seed(311)
+# We set train control as cross validation with 5 steps (will use in several models)
+trControl <- trainControl(method="cv", number=5)
+modelClassTree <- train(classe~., method="rpart", data=TrainSet, trControl=trControl)
+fancyRpartPlot(modelClassTree$finalModel)
+
+#Predicting
+predictClassTree <- predict(modelClassTree, newdata=TestSet)
+confMat <- confusionMatrix(predictClassTree, TestSet$classe)
+confMat
+```
+
+We see that the accuracy of this model is a tad lower than 50%, so it's not a very good model.
+
+## Training and predicting with random forests method
+
+```{r}
+#Training the model
+modelRandomForest <- train(classe~., method="rf", data=TrainSet, trControl=trControl, verbose=FALSE)
+
+#Predicting
+predictRF <- predict(modelRandomForest, newdata=TestSet)
+confMatRF <- confusionMatrix(predictRF, TestSet$classe)
+confMatRF
+```
+
+This model gives us 99.1% accuracy. 
+
+```{r}
+#To see a bit more info on the model and the variables that the model takes into account:
+print(modelRandomForest)
+names(modelRandomForest)
+```
+
+## Generalized boosted Method
+
+```{r}
+#Train the model
+controlGBM <- trainControl(method = "repeatedcv", number = 5, repeats = 1)
+modelGBM  <- train(classe ~ ., data=TrainSet, method = "gbm",
+                    trControl = controlGBM, verbose = FALSE)
+
+#Predicting
+predictGBM <- predict(modelGBM, newdata=TestSet)
+confMatGBM <- confusionMatrix(predictGBM, TestSet$classe)
+confMatGBM
+```
+
+Acuuracy for GBM model is 96%.
+
+So out of our three models accuracy is:
+a. Calssification Tree: 49.6%
+b. Random Forests: 99.1%
+c. Generalized boosting: 96.2%
+
+The most acurate model of the three is the one using Random Forests. 
+
