@@ -2,7 +2,9 @@
 title: "Prediction Assignment Writeup"
 author: "José Eduardo Mata"
 date: "9/30/2020"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 # Prediction assignment writeup
@@ -118,7 +120,7 @@ confMatRF <- confusionMatrix(predictRF, TestSet$classe)
 confMatRF
 ```
 
-This model gives us 99.1% accuracy. 
+This model gives us 99% accuracy. 
 
 ```{r}
 #To see a bit more info on the model and the variables that the model takes into account:
@@ -143,9 +145,19 @@ confMatGBM
 Acuuracy for GBM model is 96%.
 
 So out of our three models accuracy is:
-a. Calssification Tree: 49.6%
-b. Random Forests: 99.1%
-c. Generalized boosting: 96.2%
+a. Calssification Tree: 49%
+b. Random Forests: 99%
+c. Generalized boosted: 96%
 
 The most acurate model of the three is the one using Random Forests. 
+
+## Final test predictions:
+
+```{r}
+TestDataC<-TestData[,-ColRemove]
+TestDataC<-TestData[,-c(1:7)]
+
+FinalTestPred <- predict(modelRandomForest,newdata=TestDataC)
+FinalTestPred
+```
 
