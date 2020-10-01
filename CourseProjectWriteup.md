@@ -326,34 +326,34 @@ confMat
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1528  477  489  420  164
-##          B   26  378   32  196  165
-##          C  117  284  505  348  251
+##          A 1510  505  481  421  171
+##          B   23  367   32  181  147
+##          C  117  267  513  362  294
 ##          D    0    0    0    0    0
-##          E    3    0    0    0  502
+##          E   24    0    0    0  470
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.495           
-##                  95% CI : (0.4821, 0.5078)
+##                Accuracy : 0.486           
+##                  95% CI : (0.4731, 0.4988)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc > NIR] : < 2.2e-16       
 ##                                           
-##                   Kappa : 0.3396          
+##                   Kappa : 0.3278          
 ##                                           
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9128  0.33187  0.49220   0.0000  0.46396
-## Specificity            0.6319  0.91172  0.79420   1.0000  0.99938
-## Pos Pred Value         0.4964  0.47428  0.33555      NaN  0.99406
-## Neg Pred Value         0.9480  0.85043  0.88105   0.8362  0.89219
+## Sensitivity            0.9020  0.32221  0.50000   0.0000  0.43438
+## Specificity            0.6253  0.91930  0.78596   1.0000  0.99500
+## Pos Pred Value         0.4890  0.48933  0.33033      NaN  0.95142
+## Neg Pred Value         0.9414  0.84966  0.88158   0.8362  0.88648
 ## Prevalence             0.2845  0.19354  0.17434   0.1638  0.18386
-## Detection Rate         0.2596  0.06423  0.08581   0.0000  0.08530
-## Detection Prevalence   0.5230  0.13543  0.25573   0.0000  0.08581
-## Balanced Accuracy      0.7724  0.62179  0.64320   0.5000  0.73167
+## Detection Rate         0.2566  0.06236  0.08717   0.0000  0.07986
+## Detection Prevalence   0.5247  0.12744  0.26389   0.0000  0.08394
+## Balanced Accuracy      0.7636  0.62076  0.64298   0.5000  0.71469
 ```
 
 We see that the accuracy of this model is a tad lower than 50%, so it's not a very good model.
@@ -376,37 +376,37 @@ confMatRF
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1673    7    0    0    0
-##          B    1 1129   10    0    0
-##          C    0    3 1012   21    0
-##          D    0    0    4  943    1
-##          E    0    0    0    0 1081
+##          A 1673   15    0    0    0
+##          B    0 1121    7    0    0
+##          C    0    3 1008    8    0
+##          D    0    0   11  954    5
+##          E    1    0    0    2 1077
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.992           
-##                  95% CI : (0.9894, 0.9941)
+##                Accuracy : 0.9912          
+##                  95% CI : (0.9884, 0.9934)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc > NIR] : < 2.2e-16       
 ##                                           
-##                   Kappa : 0.9899          
+##                   Kappa : 0.9888          
 ##                                           
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9994   0.9912   0.9864   0.9782   0.9991
-## Specificity            0.9983   0.9977   0.9951   0.9990   1.0000
-## Pos Pred Value         0.9958   0.9904   0.9768   0.9947   1.0000
-## Neg Pred Value         0.9998   0.9979   0.9971   0.9957   0.9998
+## Sensitivity            0.9994   0.9842   0.9825   0.9896   0.9954
+## Specificity            0.9964   0.9985   0.9977   0.9967   0.9994
+## Pos Pred Value         0.9911   0.9938   0.9892   0.9835   0.9972
+## Neg Pred Value         0.9998   0.9962   0.9963   0.9980   0.9990
 ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-## Detection Rate         0.2843   0.1918   0.1720   0.1602   0.1837
-## Detection Prevalence   0.2855   0.1937   0.1760   0.1611   0.1837
-## Balanced Accuracy      0.9989   0.9945   0.9907   0.9886   0.9995
+## Detection Rate         0.2843   0.1905   0.1713   0.1621   0.1830
+## Detection Prevalence   0.2868   0.1917   0.1732   0.1648   0.1835
+## Balanced Accuracy      0.9979   0.9914   0.9901   0.9932   0.9974
 ```
 
-This model gives us 99.1% accuracy. 
+This model gives us 99% accuracy. 
 
 
 ```r
@@ -427,12 +427,12 @@ print(modelRandomForest)
 ## Resampling results across tuning parameters:
 ## 
 ##   mtry  Accuracy   Kappa    
-##    2    0.9911909  0.9888546
-##   27    0.9895889  0.9868289
-##   52    0.9815825  0.9766985
+##    2    0.9900996  0.9874746
+##   27    0.9914832  0.9892261
+##   52    0.9842761  0.9801080
 ## 
 ## Accuracy was used to select the optimal model using the largest value.
-## The final value used for the model was mtry = 2.
+## The final value used for the model was mtry = 27.
 ```
 
 ```r
@@ -467,42 +467,58 @@ confMatGBM
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1650   33    0    3    2
-##          B   14 1082   34    3    9
-##          C    7   23  980   36    5
-##          D    2    0   10  912   12
-##          E    1    1    2   10 1054
+##          A 1648   50    0    0    0
+##          B   16 1055   32    4   17
+##          C    5   32  976   30    8
+##          D    5    1   16  923   18
+##          E    0    1    2    7 1039
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9648          
-##                  95% CI : (0.9598, 0.9694)
+##                Accuracy : 0.9585          
+##                  95% CI : (0.9531, 0.9635)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc > NIR] : < 2.2e-16       
 ##                                           
-##                   Kappa : 0.9555          
+##                   Kappa : 0.9475          
 ##                                           
-##  Mcnemar's Test P-Value : 5.182e-06       
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9857   0.9500   0.9552   0.9461   0.9741
-## Specificity            0.9910   0.9874   0.9854   0.9951   0.9971
-## Pos Pred Value         0.9775   0.9475   0.9324   0.9744   0.9869
-## Neg Pred Value         0.9943   0.9880   0.9905   0.9895   0.9942
+## Sensitivity            0.9845   0.9263   0.9513   0.9575   0.9603
+## Specificity            0.9881   0.9855   0.9846   0.9919   0.9979
+## Pos Pred Value         0.9706   0.9386   0.9286   0.9585   0.9905
+## Neg Pred Value         0.9938   0.9824   0.9897   0.9917   0.9911
 ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-## Detection Rate         0.2804   0.1839   0.1665   0.1550   0.1791
-## Detection Prevalence   0.2868   0.1941   0.1786   0.1590   0.1815
-## Balanced Accuracy      0.9883   0.9687   0.9703   0.9706   0.9856
+## Detection Rate         0.2800   0.1793   0.1658   0.1568   0.1766
+## Detection Prevalence   0.2885   0.1910   0.1786   0.1636   0.1782
+## Balanced Accuracy      0.9863   0.9559   0.9679   0.9747   0.9791
 ```
 
 Acuuracy for GBM model is 96%.
 
 So out of our three models accuracy is:
-a. Calssification Tree: 49.6%
-b. Random Forests: 99.1%
-c. Generalized boosting: 96.2%
+a. Calssification Tree: 49%
+b. Random Forests: 99%
+c. Generalized boosted: 96%
 
 The most acurate model of the three is the one using Random Forests. 
+
+## Final test predictions:
+
+
+```r
+TestDataC<-TestData[,-ColRemove]
+TestDataC<-TestData[,-c(1:7)]
+
+FinalTestPred <- predict(modelRandomForest,newdata=TestDataC)
+FinalTestPred
+```
+
+```
+##  [1] B A B A A E D B A A B C B A E E A B B B
+## Levels: A B C D E
+```
 
